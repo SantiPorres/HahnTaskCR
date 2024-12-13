@@ -16,6 +16,7 @@ COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
 RUN dotnet restore "./WebAPI/WebAPI.csproj"
 COPY . .
 WORKDIR "/src/WebAPI"
+# RUN dotnet ./env.json | dotnet user-secrets set
 RUN dotnet build "./WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
