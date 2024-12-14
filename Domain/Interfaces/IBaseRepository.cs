@@ -9,4 +9,5 @@ public interface IBaseRepository<T> where T : AuditableBaseEntity
     Task<T> Add(T entity);
     Task Update(T entity);
     Task Delete(int id);
+    Task Upsert(T entity);
 }

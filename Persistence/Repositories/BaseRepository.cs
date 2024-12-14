@@ -45,4 +45,17 @@ public class BaseRepository<T>: IBaseRepository<T> where T: AuditableBaseEntity
         entity.DeletedAt = DateTime.Now;
         await Update(entity);
     }
+
+    public async Task Upsert(T entity)
+    {
+        var existingEntity = await Entities.Where(record => record.Id == entity.Id).CountAsync();
+        if (existingEntity > 0)
+        {
+            Entities.Update(entity);
+        } else
+        {
+            await Entities.AddAsync(entity);
+        }
+        await _context.SaveChangesAsync();
+    }
 }

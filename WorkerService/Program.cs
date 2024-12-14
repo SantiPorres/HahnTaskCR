@@ -1,7 +1,12 @@
-using WorkerService;
+using Application;
+using BackgroundJobs;
+using Persistence;
 
 var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+
+builder.Services.AddApplicationCore();
+builder.Services.AddPersistenceInfrastructure(builder.Configuration);
+builder.Services.AddBackGroundJobsInfrastructure(builder.Configuration);
 
 var host = builder.Build();
-host.Run();
+await host.RunAsync();

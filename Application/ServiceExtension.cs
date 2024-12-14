@@ -1,5 +1,6 @@
-using Application.Interfaces;
 using Application.Services;
+using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -10,7 +11,7 @@ public static class ServiceExtension
     {
         #region Services
 
-        services.AddScoped<IDataFetchingService, DataFetchingService>();
+        services.AddScoped<IExternalApiService<Card>, ExternalCardApiService>();
 
         #endregion
     }
