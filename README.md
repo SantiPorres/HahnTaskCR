@@ -10,3 +10,14 @@ dotnet ef migrations add InitialMigration --project Persistence --startup-projec
 Run migrations
 dotnet ef database update --project Persistence --startup-project WebAPI
 
+
+SQL Server
+
+Pull image
+docker pull mcr.microsoft.com/mssql/server:2022-latest
+
+Create volume
+docker volume create sql-server-data
+
+Run container
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=MyStrongPassword123" -p 1433:1433 -v sql-server-data:/var/opt/mssql mcr.microsoft.com/mssql/server:2022-latest
