@@ -11,7 +11,7 @@ namespace BackgroundJobs
     {
         public static void AddBackGroundJobsInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHostedService<DataSyncJob>();
+            services.AddScoped<DataSyncJob>();
             services.AddHttpClient<IExternalApiService<Card>, ExternalCardApiService>();
         }
     }

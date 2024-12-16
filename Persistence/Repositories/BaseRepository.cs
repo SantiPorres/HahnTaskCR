@@ -18,9 +18,9 @@ public class BaseRepository<T>: IBaseRepository<T> where T: AuditableBaseEntity
         Entities = context.Set<T>();
     }
     
-    public IAsyncEnumerable<T> List()
+    public async Task<IEnumerable<T>> List()
     {
-        return Entities.AsAsyncEnumerable();
+        return await Entities.ToListAsync();
     }
 
     public async Task<T> GetById(int id)

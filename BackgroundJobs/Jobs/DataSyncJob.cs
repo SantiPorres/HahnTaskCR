@@ -3,13 +3,12 @@ using Application.DTOs;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace BackgroundJobs.Jobs;
 
-public class DataSyncJob(IServiceProvider serviceProvider) : BackgroundService
+public class DataSyncJob(IServiceProvider serviceProvider)
 {
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    public async Task Run()
     {
         using (var scope = serviceProvider.CreateScope())
         {

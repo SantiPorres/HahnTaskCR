@@ -4,7 +4,7 @@ namespace Domain.Interfaces;
 
 public interface IBaseRepository<T> where T : AuditableBaseEntity
 {
-    IAsyncEnumerable<T> List();
+    Task<IEnumerable<T>> List();
     Task<T> GetById(int id);
     Task<T> Add(T entity);
     Task Update(T entity);
