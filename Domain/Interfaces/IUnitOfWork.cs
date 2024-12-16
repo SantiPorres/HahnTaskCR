@@ -4,5 +4,5 @@ namespace Domain.Interfaces;
 
 public interface IUnitOfWork: IDisposable
 {
-    IBaseRepository<Card> CardRepository { get; }
+    IBaseRepository<Card> Cards { get; set; }
 }

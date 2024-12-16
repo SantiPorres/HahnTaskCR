@@ -1,29 +1,34 @@
-﻿using Domain.Entities;
+﻿using System.Text.Json;
+using Application.DTOs;
+using Domain.Entities;
 using Domain.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace BackgroundJobs.Jobs
-{
-    public class DataSyncJob : BackgroundService
-    {
-        private readonly IExternalApiService<Card> _cardApiService;
-        private IUnitOfWork _unitOfWork;
-        public DataSyncJob(IExternalApiService<Card> cardApiService, IUnitOfWork unitOfWork)
-        {
-            _cardApiService = cardApiService;
-            _unitOfWork = unitOfWork;
-        }
+namespace BackgroundJobs.Jobs;
 
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+public class DataSyncJob(IServiceProvider serviceProvider) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        using (var scope = serviceProvider.CreateScope())
         {
-            while (!cancellationToken.IsCancellationRequested)
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            IExternalApiService<Card> cardService = scope.ServiceProvider.GetRequiredService<IExternalApiService<Card>>();
+            string response = await cardService.GetDataAsync();
+            var cards = JsonSerializer.Deserialize<CardsResponseDto>(response);
+            foreach (var card in cards?.Items ?? [])
             {
-                Console.WriteLine("Job execution");
-                //var cards = await _cardApiService.GetDataAsync();
-                //foreach (var card in cards)
-                //{
-                //    await _unitOfWork.CardRepository.Upsert(card);
-                //}
+                Card entity = new Card
+                {
+                    Id = card.Id,
+                    Name = card.Name,
+                    Rarity = card.Rarity,
+                    MaxLevel = card.MaxLevel,
+                    ElixirCost = card.ElixirCost,
+                    MaxEvolutionLevel = card.MaxEvolutionLevel
+                };
+                await unitOfWork.Cards.Upsert(entity);
             }
         }
     }

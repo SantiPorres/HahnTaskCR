@@ -12,6 +12,7 @@ public static class ServiceExtension
         #region Services
 
         services.AddScoped<IExternalApiService<Card>, ExternalCardApiService>();
+        services.AddHttpClient<IExternalApiService<Card>, ExternalCardApiService>();
 
         #endregion
     }

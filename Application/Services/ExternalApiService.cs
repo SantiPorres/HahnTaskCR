@@ -1,24 +1,29 @@
-﻿using Domain.Common;
+﻿using System.Text.Json;
+using Domain.Common;
 using Domain.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Services
 {
     public abstract class ExternalApiService<T> : IExternalApiService<T> where T : AuditableBaseEntity
     {
-        protected HttpClient _httpClient;
-        protected string? _endpoint;
-        public ExternalApiService(HttpClient httpClient)
+        private readonly HttpClient _httpClient;
+        protected string? Endpoint;
+        protected ExternalApiService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri(configuration["Api:BaseAddress"] ?? "https://api.clashroyale.com/");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(
+                "Bearer", configuration["Api:BearerToken"]); 
         }
 
-        public async Task<IEnumerable<T>> GetDataAsync()
+        public async Task<string> GetDataAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync(_endpoint);
+                var response = await _httpClient.GetAsync(Endpoint);
                 response.EnsureSuccessStatusCode();
-                return (IEnumerable<T>)response.Content;
+                return await response.Content.ReadAsStringAsync();
             } catch (Exception)
             {
                 throw;

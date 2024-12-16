@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Domain.Common;
 using Domain.Interfaces;
 using Persistence.Contexts;
@@ -48,8 +49,8 @@ public class BaseRepository<T>: IBaseRepository<T> where T: AuditableBaseEntity
 
     public async Task Upsert(T entity)
     {
-        var existingEntity = await Entities.Where(record => record.Id == entity.Id).CountAsync();
-        if (existingEntity > 0)
+        var recordExists = await Entities.Where(record => record.Id == entity.Id).AnyAsync();
+        if (recordExists)
         {
             Entities.Update(entity);
         } else

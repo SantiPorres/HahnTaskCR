@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
 
 namespace Persistence.Contexts
 {
@@ -10,5 +11,7 @@ namespace Persistence.Contexts
         {
 
         }
+        
+        public virtual DbSet<Card> Cards { get; set; }
     }
 }

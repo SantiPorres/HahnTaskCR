@@ -4,6 +4,6 @@ namespace Domain.Interfaces
 {
     public interface IExternalApiService<T> where T : AuditableBaseEntity
     {
-        Task<IEnumerable<T>> GetDataAsync();
+        Task<string> GetDataAsync();
     }
 }
